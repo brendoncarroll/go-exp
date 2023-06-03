@@ -1,0 +1,6 @@
+
+test:
+    go test ./...
+
+testv:
+    go test -v -count=1 ./...
