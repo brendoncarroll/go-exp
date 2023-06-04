@@ -8,7 +8,10 @@ type filter[T any] struct {
 }
 
 func NewFilter[T any](x Iterator[T], pred func(T) bool) Iterator[T] {
-	return &filter[T]{}
+	return &filter[T]{
+		x:    x,
+		pred: pred,
+	}
 }
 
 func (f *filter[T]) Next(ctx context.Context, dst *T) error {
