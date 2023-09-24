@@ -3,6 +3,8 @@ package streams
 import (
 	"context"
 	"errors"
+
+	"github.com/brendoncarroll/go-exp/maybe"
 )
 
 // EndOfStream is returned by Next and Seek to indicate that the stream has no more elements.
@@ -97,18 +99,47 @@ func ReadFull[T any](ctx context.Context, it Iterator[T], buf []T) (int, error) 
 // If more than max elements are emitted, then Collect will return an error.
 func Collect[T any](ctx context.Context, it Iterator[T], max int) (ret []T, _ error) {
 	for {
-		var dst T
-		if err := it.Next(ctx, &dst); err != nil {
+		x, err := Next(ctx, it)
+		if err != nil {
 			if IsEOS(err) {
 				break
 			}
 			return ret, err
 		}
 		if len(ret) < max {
-			ret = append(ret, dst)
+			ret = append(ret, x)
 		} else {
 			return ret, errors.New("streams: too many elements to collect")
 		}
 	}
 	return ret, nil
+}
+
+// First returns (Just, nil) when the stream produces the next element or (Nothing, nil) if the stream is over.
+// First returns (Nothing, err) if it encouters any error.
+func First[T any](ctx context.Context, it Iterator[T]) (maybe.Maybe[T], error) {
+	x, err := Next(ctx, it)
+	if err != nil {
+		if IsEOS(err) {
+			err = nil
+		}
+		return maybe.Nothing[T](), err
+	}
+	return maybe.Just(x), nil
+}
+
+// Last returns the last element that the stream produces.
+func Last[T any](ctx context.Context, it Iterator[T]) (last maybe.Maybe[T], _ error) {
+	for {
+		x, err := Next(ctx, it)
+		if err != nil {
+			if IsEOS(err) {
+				break
+			}
+			return maybe.Nothing[T](), err
+		}
+		last.X = x
+		last.Ok = true
+	}
+	return last, nil
 }

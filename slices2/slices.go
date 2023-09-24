@@ -1,5 +1,7 @@
 package slices2
 
+import "cmp"
+
 // Map returns a new slice with fn applied to all the elements.
 func Map[A, B any, SA ~[]A](as SA, fn func(A) B) []B {
 	bs := make([]B, len(as))
@@ -67,4 +69,51 @@ func DedupSortedFunc[T any, S ~[]T](xs S, eq func(a, b T) bool) S {
 		}
 	}
 	return xs[:len(xs)-deleted]
+}
+
+func Merge[T cmp.Ordered, S ~[]T](dst S, left, right S) int {
+	return MergeFunc(dst, left, right, func(a, b T) int {
+		switch {
+		case a < b:
+			return -1
+		case a > b:
+			return 1
+		default:
+			return 0
+		}
+	})
+}
+
+func MergeFunc[T any, S ~[]T](dst S, left, right S, cmp func(a, b T) int) (n int) {
+	var l, r int
+	for n < len(dst) && l < len(left) && r < len(right) {
+		cmp := cmp(left[l], right[r])
+		if cmp < 0 {
+			dst[n] = left[l]
+			n++
+			l++
+		} else if cmp > 0 {
+			dst[n] = right[r]
+			n++
+			r++
+		} else {
+			// dst[n] = right[r] would also work
+			dst[n] = left[l]
+			n++
+			l++
+			r++
+		}
+	}
+	// only one of these loops should run
+	for n < len(dst) && l < len(left) {
+		dst[n] = left[l]
+		n++
+		l++
+	}
+	for n < len(dst) && r < len(right) {
+		dst[n] = right[r]
+		n++
+		r++
+	}
+	return n
 }

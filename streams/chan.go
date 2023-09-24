@@ -7,8 +7,8 @@ import "context"
 // If it.Next errors other than EOS, LoadChan returns that error.
 func LoadChan[T any](ctx context.Context, it Iterator[T], out chan<- T) error {
 	for {
-		var dst T
-		if err := it.Next(ctx, &dst); err != nil {
+		x, err := Next(ctx, it)
+		if err != nil {
 			if IsEOS(err) {
 				break
 			}
@@ -17,7 +17,7 @@ func LoadChan[T any](ctx context.Context, it Iterator[T], out chan<- T) error {
 		select {
 		case <-ctx.Done():
 			return ctx.Err()
-		case out <- dst:
+		case out <- x:
 		}
 	}
 	return nil
