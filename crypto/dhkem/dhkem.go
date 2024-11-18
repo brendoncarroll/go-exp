@@ -5,9 +5,9 @@ import (
 	"errors"
 	"io"
 
-	"github.com/brendoncarroll/go-exp/crypto/dhke"
-	"github.com/brendoncarroll/go-exp/crypto/kem"
-	"github.com/brendoncarroll/go-exp/crypto/xof"
+	"go.brendoncarroll.net/exp/crypto/dhke"
+	"go.brendoncarroll.net/exp/crypto/kem"
+	"go.brendoncarroll.net/exp/crypto/xof"
 )
 
 var _ kem.Scheme256[struct{}, struct{}] = Scheme256[struct{}, struct{}, struct{}]{}

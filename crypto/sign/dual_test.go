@@ -3,8 +3,8 @@ package sign_test
 import (
 	"testing"
 
-	"github.com/brendoncarroll/go-exp/crypto/sign"
-	"github.com/brendoncarroll/go-exp/crypto/sign/sig_ed25519"
+	"go.brendoncarroll.net/exp/crypto/sign"
+	"go.brendoncarroll.net/exp/crypto/sign/sig_ed25519"
 )
 
 func TestDual(t *testing.T) {

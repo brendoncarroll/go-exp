@@ -7,10 +7,10 @@ import (
 	"io"
 	"math"
 
-	"github.com/brendoncarroll/go-exp/crypto/aead"
-	"github.com/brendoncarroll/go-exp/crypto/kem"
-	"github.com/brendoncarroll/go-exp/crypto/sign"
-	"github.com/brendoncarroll/go-exp/crypto/xof"
+	"go.brendoncarroll.net/exp/crypto/aead"
+	"go.brendoncarroll.net/exp/crypto/kem"
+	"go.brendoncarroll.net/exp/crypto/sign"
+	"go.brendoncarroll.net/exp/crypto/xof"
 )
 
 type PrivateKey[KEMPriv, SigPriv any] struct {

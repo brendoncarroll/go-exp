@@ -4,7 +4,7 @@ import (
 	"context"
 	"errors"
 
-	"github.com/brendoncarroll/go-exp/maybe"
+	"go.brendoncarroll.net/exp/maybe"
 )
 
 // EndOfStream is returned by Next and Seek to indicate that the stream has no more elements.

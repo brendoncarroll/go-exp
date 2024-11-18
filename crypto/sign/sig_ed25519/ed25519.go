@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"io"
 
-	"github.com/brendoncarroll/go-exp/crypto/sign"
+	"go.brendoncarroll.net/exp/crypto/sign"
 )
 
 type (

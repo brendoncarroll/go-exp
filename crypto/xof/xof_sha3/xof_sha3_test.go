@@ -6,7 +6,7 @@ import (
 	"github.com/stretchr/testify/require"
 	"golang.org/x/crypto/sha3"
 
-	"github.com/brendoncarroll/go-exp/crypto/xof"
+	"go.brendoncarroll.net/exp/crypto/xof"
 )
 
 func TestMatchesStandard(t *testing.T) {

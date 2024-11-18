@@ -3,7 +3,7 @@ package kem_sntrup
 import (
 	"testing"
 
-	"github.com/brendoncarroll/go-exp/crypto/kem"
+	"go.brendoncarroll.net/exp/crypto/kem"
 )
 
 func TestSNTRUP4591761(t *testing.T) {

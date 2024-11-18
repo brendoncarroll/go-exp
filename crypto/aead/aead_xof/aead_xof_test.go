@@ -3,9 +3,9 @@ package aead_xof_test
 import (
 	"testing"
 
-	"github.com/brendoncarroll/go-exp/crypto/aead"
-	"github.com/brendoncarroll/go-exp/crypto/aead/aead_xof"
-	"github.com/brendoncarroll/go-exp/crypto/xof/xof_sha3"
+	"go.brendoncarroll.net/exp/crypto/aead"
+	"go.brendoncarroll.net/exp/crypto/aead/aead_xof"
+	"go.brendoncarroll.net/exp/crypto/xof/xof_sha3"
 )
 
 func TestScheme256(t *testing.T) {

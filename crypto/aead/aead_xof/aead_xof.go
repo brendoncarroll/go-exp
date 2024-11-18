@@ -5,8 +5,8 @@ import (
 	"crypto/subtle"
 	"errors"
 
-	"github.com/brendoncarroll/go-exp/crypto/aead"
-	"github.com/brendoncarroll/go-exp/crypto/xof"
+	"go.brendoncarroll.net/exp/crypto/aead"
+	"go.brendoncarroll.net/exp/crypto/xof"
 )
 
 var (

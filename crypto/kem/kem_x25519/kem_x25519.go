@@ -1,9 +1,9 @@
 package kem_x25519
 
 import (
-	"github.com/brendoncarroll/go-exp/crypto/dhke/dhke_x25519"
-	"github.com/brendoncarroll/go-exp/crypto/dhkem"
-	"github.com/brendoncarroll/go-exp/crypto/xof/xof_sha3"
+	"go.brendoncarroll.net/exp/crypto/dhke/dhke_x25519"
+	"go.brendoncarroll.net/exp/crypto/dhkem"
+	"go.brendoncarroll.net/exp/crypto/xof/xof_sha3"
 )
 
 const (

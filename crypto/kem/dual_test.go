@@ -3,10 +3,10 @@ package kem_test
 import (
 	"testing"
 
-	"github.com/brendoncarroll/go-exp/crypto/kem"
-	"github.com/brendoncarroll/go-exp/crypto/kem/kem_sntrup"
-	"github.com/brendoncarroll/go-exp/crypto/kem/kem_x25519"
-	"github.com/brendoncarroll/go-exp/crypto/xof/xof_sha3"
+	"go.brendoncarroll.net/exp/crypto/kem"
+	"go.brendoncarroll.net/exp/crypto/kem/kem_sntrup"
+	"go.brendoncarroll.net/exp/crypto/kem/kem_x25519"
+	"go.brendoncarroll.net/exp/crypto/xof/xof_sha3"
 )
 
 func TestDual(t *testing.T) {

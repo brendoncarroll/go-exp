@@ -7,7 +7,7 @@ import (
 
 	"golang.org/x/crypto/curve25519"
 
-	"github.com/brendoncarroll/go-exp/crypto/dhke"
+	"go.brendoncarroll.net/exp/crypto/dhke"
 )
 
 const (

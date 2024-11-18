@@ -7,9 +7,9 @@ import (
 
 	ntru "github.com/companyzero/sntrup4591761"
 
-	"github.com/brendoncarroll/go-exp/crypto/kem"
-	"github.com/brendoncarroll/go-exp/crypto/xof"
-	"github.com/brendoncarroll/go-exp/crypto/xof/xof_sha3"
+	"go.brendoncarroll.net/exp/crypto/kem"
+	"go.brendoncarroll.net/exp/crypto/xof"
+	"go.brendoncarroll.net/exp/crypto/xof/xof_sha3"
 )
 
 type (

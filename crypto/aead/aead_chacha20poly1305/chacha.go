@@ -5,7 +5,7 @@ import (
 
 	"golang.org/x/crypto/chacha20poly1305"
 
-	"github.com/brendoncarroll/go-exp/crypto/aead"
+	"go.brendoncarroll.net/exp/crypto/aead"
 )
 
 var (

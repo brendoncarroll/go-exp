@@ -1,4 +1,4 @@
-module github.com/brendoncarroll/go-exp
+module go.brendoncarroll.net/exp
 
 go 1.21
 

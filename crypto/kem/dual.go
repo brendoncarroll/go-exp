@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"io"
 
-	"github.com/brendoncarroll/go-exp/crypto/xof"
+	"go.brendoncarroll.net/exp/crypto/xof"
 )
 
 // DualKey is a hybrid key made of 2 keys

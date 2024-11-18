@@ -1,8 +1,9 @@
 package aead_chacha20poly1305
 
 import (
-	"github.com/brendoncarroll/go-exp/crypto/aead"
 	"testing"
+
+	"go.brendoncarroll.net/exp/crypto/aead"
 )
 
 func TestN64(t *testing.T) {

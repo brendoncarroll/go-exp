@@ -3,7 +3,7 @@ package kem_x25519
 import (
 	"testing"
 
-	"github.com/brendoncarroll/go-exp/crypto/kem"
+	"go.brendoncarroll.net/exp/crypto/kem"
 )
 
 func TestX25519(t *testing.T) {

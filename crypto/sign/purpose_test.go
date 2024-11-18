@@ -3,9 +3,9 @@ package sign_test
 import (
 	"testing"
 
-	"github.com/brendoncarroll/go-exp/crypto/sign"
-	"github.com/brendoncarroll/go-exp/crypto/sign/sig_ed25519"
-	"github.com/brendoncarroll/go-exp/crypto/xof/xof_sha3"
+	"go.brendoncarroll.net/exp/crypto/sign"
+	"go.brendoncarroll.net/exp/crypto/sign/sig_ed25519"
+	"go.brendoncarroll.net/exp/crypto/xof/xof_sha3"
 )
 
 func TestPurpose(t *testing.T) {

@@ -1,9 +1,9 @@
 package xof_sha3
 
 import (
-	"github.com/brendoncarroll/go-exp/crypto/xof"
+	"go.brendoncarroll.net/exp/crypto/xof"
 
-	sha3int "github.com/brendoncarroll/go-exp/crypto/xof/xof_sha3/internal/sha3"
+	sha3int "go.brendoncarroll.net/exp/crypto/xof/xof_sha3/internal/sha3"
 )
 
 type SHAKE256State sha3int.State

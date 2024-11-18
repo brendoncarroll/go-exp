@@ -3,7 +3,7 @@ package sig_ed25519
 import (
 	"testing"
 
-	"github.com/brendoncarroll/go-exp/crypto/sign"
+	"go.brendoncarroll.net/exp/crypto/sign"
 )
 
 func TestEd25519(t *testing.T) {

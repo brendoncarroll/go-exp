@@ -3,7 +3,7 @@ package sign
 import (
 	"io"
 
-	"github.com/brendoncarroll/go-exp/crypto/xof"
+	"go.brendoncarroll.net/exp/crypto/xof"
 )
 
 var _ Scheme[struct{}, struct{}] = Purpose[struct{}, struct{}, struct{}]{}
