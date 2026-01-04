@@ -23,18 +23,18 @@ func NewPeeker[T any](x Iterator[T], cp func(dst *T, src T)) Peekable[T] {
 	}
 }
 
-func (pi *Peeker[T]) Next(ctx context.Context, dst *T) error {
+func (pi *Peeker[T]) Next(ctx context.Context, dst []T) (int, error) {
 	if pi.next.Ok {
-		pi.cp(dst, pi.next.X)
+		pi.cp(&dst[0], pi.next.X)
 		pi.next.Ok = false
-		return nil
+		return 1, nil
 	}
 	return pi.x.Next(ctx, dst)
 }
 
 func (pi *Peeker[T]) Peek(ctx context.Context, dst *T) error {
 	if !pi.next.Ok {
-		if err := pi.x.Next(ctx, &pi.next.X); err != nil {
+		if err := NextUnit(ctx, pi.x, &pi.next.X); err != nil {
 			return err
 		}
 		pi.next.Ok = true

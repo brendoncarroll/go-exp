@@ -4,6 +4,8 @@ import (
 	"context"
 )
 
+var _ Iterator[int] = &Map[float64, int]{}
+
 type Map[X, Y any] struct {
 	xs Iterator[X]
 	fn func(y *Y, x X)
@@ -17,10 +19,10 @@ func NewMap[X, Y any](xs Iterator[X], fn func(y *Y, x X)) *Map[X, Y] {
 	}
 }
 
-func (m Map[X, Y]) Next(ctx context.Context, dst *Y) error {
-	if err := m.xs.Next(ctx, &m.x); err != nil {
-		return err
+func (m Map[X, Y]) Next(ctx context.Context, dst []Y) (int, error) {
+	if err := NextUnit(ctx, m.xs, &m.x); err != nil {
+		return 0, err
 	}
-	m.fn(dst, m.x)
-	return nil
+	m.fn(&dst[0], m.x)
+	return 1, nil
 }

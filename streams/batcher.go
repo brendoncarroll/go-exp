@@ -21,25 +21,26 @@ func NewBatcher[T any](inner Iterator[T], min int, dur time.Duration) *Batcher[T
 	}
 }
 
-func (b *Batcher[T]) Next(ctx context.Context, dst *[]T) error {
-	*dst = (*dst)[:0]
+func (b *Batcher[T]) Next(ctx context.Context, dst [][]T) (int, error) {
+	dst2 := &dst[0]
+	*dst2 = (*dst2)[:0]
 	start := time.Now()
 	// TODO: need context to cancel long running calls to inner.Next
 	for {
 		var x T
-		if err := b.inner.Next(ctx, &x); err != nil {
-			if IsEOS(err) && len(*dst) > 0 {
-				return nil
+		if err := NextUnit(ctx, b.inner, &x); err != nil {
+			if IsEOS(err) && len(*dst2) > 0 {
+				return 1, nil
 			}
-			return err
+			return 0, err
 		}
-		*dst = append(*dst, x)
-		if len(*dst) >= b.min {
+		*dst2 = append(*dst2, x)
+		if len(*dst2) >= b.min {
 			break
 		}
 		if now := time.Now(); now.Sub(start) >= b.dur {
 			break
 		}
 	}
-	return nil
+	return 1, nil
 }

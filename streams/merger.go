@@ -25,15 +25,18 @@ func NewMerger[T any](inputs []Peekable[T], cmp func(a, b T) int) *Merger[T] {
 	}
 }
 
-func (sm *Merger[T]) Next(ctx context.Context, dst *T) error {
+func (sm *Merger[T]) Next(ctx context.Context, dst []T) (int, error) {
 	sr, err := sm.selectStream(ctx)
 	if err != nil {
-		return err
+		return 0, err
 	}
-	if err := sr.Next(ctx, dst); err != nil {
-		return err
+	if err := NextUnit(ctx, sr, &dst[0]); err != nil {
+		return 0, err
 	}
-	return sm.advancePast(ctx, *dst)
+	if err := sm.advancePast(ctx, dst[0]); err != nil {
+		return 0, err
+	}
+	return 1, nil
 }
 
 func (sm *Merger[T]) Peek(ctx context.Context, dst *T) error {
@@ -55,7 +58,7 @@ func (sm *Merger[T]) advancePast(ctx context.Context, k T) error {
 		}
 		// if the stream is behind, advance it.
 		if sm.cmp(x, k) <= 0 {
-			if err := sr.Next(ctx, &x); err != nil {
+			if err := NextUnit(ctx, sr, &x); err != nil {
 				return err
 			}
 		}

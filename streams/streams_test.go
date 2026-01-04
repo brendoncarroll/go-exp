@@ -13,10 +13,10 @@ func TestSlice(t *testing.T) {
 
 	var dst int
 	for i := 0; i < 5; i++ {
-		require.NoError(t, it.Next(ctx, &dst))
+		require.NoError(t, NextUnit(ctx, it, &dst))
 		require.Equal(t, i, dst)
 	}
 	for i := 0; i < 3; i++ {
-		require.ErrorIs(t, it.Next(ctx, &dst), EOS())
+		require.ErrorIs(t, NextUnit(ctx, it, &dst), EOS())
 	}
 }

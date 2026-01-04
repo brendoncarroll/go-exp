@@ -15,13 +15,16 @@ func NewSlice[T any](xs []T, cp func(*T, T)) *Slice[T] {
 	return &Slice[T]{xs: xs, pos: 0, cp: cp}
 }
 
-func (it *Slice[T]) Next(ctx context.Context, dst *T) error {
+func (it *Slice[T]) Next(ctx context.Context, dst []T) (int, error) {
 	if it.pos >= len(it.xs) {
-		return EOS()
+		return 0, EOS()
 	}
-	it.cp(dst, it.xs[it.pos])
-	it.pos++
-	return nil
+	var n int
+	for ; n < len(dst) && it.pos < len(it.xs); n++ {
+		it.cp(&dst[n], it.xs[it.pos])
+		it.pos++
+	}
+	return n, nil
 }
 
 func (it *Slice[T]) Reset() {

@@ -14,13 +14,13 @@ func NewFilter[T any](x Iterator[T], pred func(T) bool) Iterator[T] {
 	}
 }
 
-func (f *filter[T]) Next(ctx context.Context, dst *T) error {
+func (f *filter[T]) Next(ctx context.Context, dst []T) (int, error) {
 	for {
-		if err := f.x.Next(ctx, dst); err != nil {
-			return err
+		if err := NextUnit(ctx, f.x, &dst[0]); err != nil {
+			return 0, err
 		}
-		if f.pred(*dst) {
-			return nil
+		if f.pred(dst[0]) {
+			return 1, nil
 		}
 	}
 }

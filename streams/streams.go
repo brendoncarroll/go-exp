@@ -3,6 +3,7 @@ package streams
 import (
 	"context"
 	"errors"
+	"fmt"
 
 	"go.brendoncarroll.net/exp/maybe"
 )
@@ -25,8 +26,11 @@ func IsEOS(err error) bool {
 }
 
 type Iterator[T any] interface {
-	// Next advances the iterator and reads the next element into dst
-	Next(ctx context.Context, dst *T) error
+	// Next advances the iterator and reads the next elements into dst.
+	// Next may return (0, nil) IFF len(dst) == 0
+	// Next may also panic if len(dst) == 0
+	// Otherwise n is always >= 0 when err == nil
+	Next(ctx context.Context, dst []T) (int, error)
 }
 
 // Peekable is an Iterator which also has the Peek method
@@ -52,8 +56,22 @@ type Reader[T any] interface {
 // It calls it.Next on the Iterator
 func Next[T any](ctx context.Context, it Iterator[T]) (T, error) {
 	var dst T
-	err := it.Next(ctx, &dst)
+	err := NextUnit(ctx, it, &dst)
 	return dst, err
+}
+
+// NextUnit reads a single element from an Iterator
+func NextUnit[T any](ctx context.Context, it Iterator[T], dst *T) error {
+	var xs [1]T
+	n, err := it.Next(ctx, xs[:])
+	if err != nil {
+		return err
+	}
+	if n < 1 {
+		return fmt.Errorf("streams: incorrect Iterator, returned n<1")
+	}
+	*dst = xs[0]
+	return nil
 }
 
 // Peek return a new T instead of writing it to a pointer destination.
@@ -69,7 +87,7 @@ func Peek[T any](ctx context.Context, it Peekable[T]) (T, error) {
 func ForEach[T any](ctx context.Context, it Iterator[T], fn func(T) error) error {
 	var dst T
 	for {
-		if err := it.Next(ctx, &dst); err != nil {
+		if err := NextUnit(ctx, it, &dst); err != nil {
 			if IsEOS(err) {
 				break
 			}
@@ -87,9 +105,14 @@ func ForEach[T any](ctx context.Context, it Iterator[T], fn func(T) error) error
 // ReadFull copies elements from the iterator into buf.
 // ReadFull returns EOS when the iterator is empty.
 func ReadFull[T any](ctx context.Context, it Iterator[T], buf []T) (int, error) {
-	for i := range buf {
-		if err := it.Next(ctx, &buf[i]); err != nil {
-			return i, err
+	var n int
+	for n < len(buf) {
+		if n2, err := it.Next(ctx, buf[n:]); err != nil {
+			return 0, err
+		} else if n < 1 {
+			return 0, fmt.Errorf("streams: incorrect iterator")
+		} else {
+			n += n2
 		}
 	}
 	return len(buf), nil
