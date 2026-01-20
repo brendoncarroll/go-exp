@@ -28,7 +28,7 @@ func (fm *Mutator[T]) Next(ctx context.Context, dst []T) (int, error) {
 			return 0, err
 		}
 		if fm.fn(&dst[0]) {
-			return 0, nil
+			return 1, nil
 		}
 	}
 }

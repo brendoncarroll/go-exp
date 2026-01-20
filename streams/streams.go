@@ -27,9 +27,17 @@ func IsEOS(err error) bool {
 
 type Iterator[T any] interface {
 	// Next advances the iterator and reads the next elements into dst.
-	// Next may return (0, nil) IFF len(dst) == 0
-	// Next may also panic if len(dst) == 0
-	// Otherwise n is always >= 0 when err == nil
+	// If len(dst) > 0, then Next must either return an error, or return n > 0.
+	// That means Next must block until at least 1 element is available, if len(dst) > 0.
+	// If the end of the stream has been reached, then Next returns EOS.
+	// Once Next has returned EOS, it must always return (0, EOS) forever after.
+	// If err != nil, then n is meaningless, and *should be* 0.
+	//
+	// Callers should not pass a buffer of length zero, the behavior
+	// is not specified at the interface level.
+	// If len(dst) == 0:
+	//   - Next may return (0, nil), although this has the potential for an infinite loop.
+	//   - Next may also panic if len(dst) == 0, this can be annoying, but makes misuse obvious.
 	Next(ctx context.Context, dst []T) (int, error)
 }
 
