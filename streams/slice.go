@@ -27,6 +27,24 @@ func (it *Slice[T]) Next(ctx context.Context, dst []T) (int, error) {
 	return n, nil
 }
 
+// Peek implements Peeker
+func (it *Slice[T]) Peek(ctx context.Context, dst *T) error {
+	if it.pos >= len(it.xs) {
+		return EOS()
+	}
+	it.cp(dst, it.xs[it.pos])
+	return nil
+}
+
+// Skip implements Skipper
+func (it *Slice[T]) Skip(ctx context.Context, n int) error {
+	if it.pos+n > len(it.xs) {
+		return EOS()
+	}
+	it.pos += n
+	return nil
+}
+
 func (it *Slice[T]) Reset() {
 	it.pos = 0
 }

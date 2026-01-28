@@ -75,8 +75,8 @@ func NextUnit[T any](ctx context.Context, it Iterator[T], dst *T) error {
 	if err != nil {
 		return err
 	}
-	if n < 1 {
-		return fmt.Errorf("streams: incorrect Iterator, returned n<1")
+	if n < 0 {
+		return fmt.Errorf("streams: incorrect Iterator, returned n<0")
 	}
 	*dst = xs[0]
 	return nil
@@ -173,4 +173,32 @@ func Last[T any](ctx context.Context, it Iterator[T]) (last maybe.Maybe[T], _ er
 		last.Ok = true
 	}
 	return last, nil
+}
+
+type Skipper interface {
+	// Skip should advance the iterator by n elements, discarding them.
+	// Skip returns any errors that would have been encountered by Next
+	// including EOS
+	Skip(ctx context.Context, n int) error
+}
+
+// Skip advances the iterator by n.
+// If it implements Skipper, then skip will be called instead of Next.
+// otherwise next is called repeatedly and the result is discarded.
+func Skip[T any](ctx context.Context, it Iterator[T], n int) error {
+	if n < 0 {
+		return fmt.Errorf("streams.Skip: n must be positive: %d", n)
+	}
+	if sk, ok := it.(Skipper); ok {
+		return sk.Skip(ctx, n)
+	}
+	// fallback implementation
+	var dst [1]T
+	for range n {
+		_, err := it.Next(ctx, dst[:])
+		if err != nil {
+			return err
+		}
+	}
+	return nil
 }

@@ -1,6 +1,6 @@
 module go.brendoncarroll.net/exp
 
-go 1.21
+go 1.23
 
 require (
 	github.com/companyzero/sntrup4591761 v0.0.0-20220309191932-9e0f3af2f07a
