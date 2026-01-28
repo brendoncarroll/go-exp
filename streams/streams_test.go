@@ -9,6 +9,7 @@ import (
 
 	"github.com/stretchr/testify/require"
 	"go.brendoncarroll.net/exp/maybe"
+	"go.brendoncarroll.net/exp/slices2"
 )
 
 func TestSlice(t *testing.T) {
@@ -44,6 +45,54 @@ func TestSeq(t *testing.T) {
 				return
 			}
 			require.Equal(t, tc, actual)
+		})
+	}
+}
+
+func TestMerge(t *testing.T) {
+	type testCase struct {
+		Ins [][]int
+		Out []int
+	}
+	tcs := []testCase{
+		{
+			Ins: [][]int{},
+			Out: nil,
+		},
+		{
+			Ins: [][]int{
+				{1, 2, 3},
+			},
+			Out: []int{1, 2, 3},
+		},
+		{
+			Ins: [][]int{
+				{1, 2, 3},
+				{1, 2, 3},
+				{1, 2, 3},
+			},
+			Out: []int{1, 1, 1, 2, 2, 2, 3, 3, 3},
+		},
+		{
+			Ins: [][]int{
+				{0, 2, 4, 6, 8},
+				{1},
+				{3, 5, 7, 9},
+			},
+			Out: []int{0, 1, 2, 3, 4, 5, 6, 7, 8, 9},
+		},
+	}
+	for i, tc := range tcs {
+		t.Run(fmt.Sprintf("%d", i), func(t *testing.T) {
+			ctx := context.TODO()
+			ins := slices2.Map(tc.Ins, func(x []int) Peekable[int] {
+				return NewSlice(x, nil)
+			})
+			m := NewMerger(ins, cmp.Compare[int])
+			actual, err := Collect(ctx, m, 100)
+			require.NoError(t, err)
+
+			require.Equal(t, tc.Out, actual)
 		})
 	}
 }

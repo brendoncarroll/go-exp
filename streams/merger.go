@@ -11,6 +11,7 @@ var (
 	_ Peekable[int] = &Merger[int]{}
 )
 
+// Merger implements the merge part of the Mergesort algorithm.
 type Merger[T any] struct {
 	inputs []Peekable[T]
 	cmp    func(a, b T) int
@@ -33,9 +34,6 @@ func (sm *Merger[T]) Next(ctx context.Context, dst []T) (int, error) {
 	if err := NextUnit(ctx, sr, &dst[0]); err != nil {
 		return 0, err
 	}
-	if err := sm.advancePast(ctx, dst[0]); err != nil {
-		return 0, err
-	}
 	return 1, nil
 }
 
@@ -45,25 +43,6 @@ func (sm *Merger[T]) Peek(ctx context.Context, dst *T) error {
 		return err
 	}
 	return sr.Peek(ctx, dst)
-}
-
-func (sm *Merger[T]) advancePast(ctx context.Context, k T) error {
-	var x T
-	for _, sr := range sm.inputs {
-		if err := sr.Peek(ctx, &x); err != nil {
-			if IsEOS(err) {
-				continue
-			}
-			return err
-		}
-		// if the stream is behind, advance it.
-		if sm.cmp(x, k) <= 0 {
-			if err := NextUnit(ctx, sr, &x); err != nil {
-				return err
-			}
-		}
-	}
-	return nil
 }
 
 // selectStream will never return an ended stream
