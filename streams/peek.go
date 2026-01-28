@@ -17,6 +17,9 @@ func NewPeeker[T any](x Iterator[T], cp func(dst *T, src T)) Peekable[T] {
 	if p, ok := x.(Peekable[T]); ok {
 		return p
 	}
+	if cp == nil {
+		cp = func(dst *T, src T) { *dst = src }
+	}
 	return &Peeker[T]{
 		x:  x,
 		cp: cp,
