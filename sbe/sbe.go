@@ -104,7 +104,27 @@ func ReadLP16(x []byte) (ret []byte, rest []byte, _ error) {
 		return nil, nil, err
 	}
 	if len(rest) < int(n) {
-		return nil, nil, fmt.Errorf("too short to contain lp16")
+		return nil, nil, fmt.Errorf("too short to contain LP32")
+	}
+	return rest[:n], rest[n:], nil
+}
+
+// AppendLP32 appends a length-prefixed byte slice to out.
+// the length is encoded as a 32-bit little-endian integer.
+func AppendLP32(out []byte, x []byte) []byte {
+	out = AppendUint32(out, uint32(len(x)))
+	return append(out, x...)
+}
+
+// ReadLP32 reads a length-prefixed byte slice from data.
+// ReadLP32 reads the format output by AppendLP32.
+func ReadLP32(x []byte) (ret []byte, rest []byte, _ error) {
+	n, rest, err := ReadUint32(x)
+	if err != nil {
+		return nil, nil, err
+	}
+	if len(rest) < int(n) {
+		return nil, nil, fmt.Errorf("too short to contain LP32")
 	}
 	return rest[:n], rest[n:], nil
 }
